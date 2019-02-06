@@ -71,6 +71,9 @@ RUN set -ex \
 && apk del $PHPIZE_DEPS \
 && rm -fr /var/cache/apk/* /usr/src/* /usr/local/bin/phpdbg /usr/local/bin/php-cgi
 
+
+RUN apk --update add msmtp
+
 ### CLI ###
 
 RUN mkdir -p /work /local /opt/bin /etc/zsh && chmod 777 /work /local
