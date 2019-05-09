@@ -18,9 +18,6 @@ RUN set -ex \
 	&& docker-php-ext-install gd \
 	&& apk del freetype-dev libpng-dev libjpeg-turbo-dev \
 \
-&& apk add libmcrypt-dev \
-	&& pecl install channel://pecl.php.net/mcrypt-1.0.1 \
-\
 && apk add icu icu-dev \
 	&& docker-php-ext-install intl \
 	&& apk del icu-dev \
@@ -44,9 +41,9 @@ RUN set -ex \
 	&& docker-php-ext-enable memcached \
 	&& apk del zlib-dev libmemcached-dev \
 \
-&& apk add zlib-dev \
+&& apk add zlib-dev libzip-dev \
 	&& docker-php-ext-install zip \
-	&& apk del zlib-dev \
+	&& apk del zlib-dev libzip-dev \
 \
 && (\
 	mkdir -p /opt \
@@ -75,6 +72,13 @@ RUN set -ex \
 RUN apk --update add msmtp
 
 ### CLI ###
+
+RUN echo $'\
+#!/bin/sh\n\
+ln -sf /usr/bin/msmtp /usr/sbin/sendmail\n\
+'\ > /etc/local.d/msmtp-sendmail.start
+
+RUN chmod +x /etc/local.d/msmtp-sendmail.start
 
 RUN mkdir -p /work /local /opt/bin /etc/zsh && chmod 777 /work /local
 WORKDIR /work
